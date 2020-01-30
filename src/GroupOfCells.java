@@ -19,6 +19,10 @@
  * //TODO: Below.
  * I think it mite actually be easier to solve this with a Deque and a Queue but
  * I will try that at a latter time. 
+ * 
+ * Change Log:
+ * Version 1.0 Working methods with a recursive solution for compete
+ * Version 2.0 Working methods with a recursive and iterative solution for compete.
  */
 
 /**
@@ -26,7 +30,7 @@
  * was created to solve the CellCompete problem posted on Geeksforgeeks.
  * 
  * @author Luke Kelly
- * @version 1.0
+ * @version 2.0
  */
 public class GroupOfCells {
     private Cell farLeftCell;
@@ -83,16 +87,13 @@ public class GroupOfCells {
      * A recursive solution to the Cell Compete Problem, advances the current group
      * of cells by the given amount of days.
      * 
-     * @param days how many days to advance the current GroupOfCells
+     * @param days how many days to advance the current Group Of Cells
      * @throws IllegalArgumentException if days < 0
      */
     public void competeR(int days) {
-        //Check if negative days
-        if (days < 0) {
-            throw new IllegalArgumentException("Can not advance group of cells by a negative amount");
-        }
-
+        checkMinDays(days);
         /*
+         * Disclaimer: This algorithm is very similar to the iterative solution.
          * Algorithm comments:
          * 1. Create a clone of current Group of Cells
          * 2. Create pointer to current farLeftCell in the current Group Of Cells
@@ -105,7 +106,6 @@ public class GroupOfCells {
          * 4. Set the current Group Of Cells to now have the same values as the
          *    temp group of cells. 
          * 5. Recursively call this method again but decrement the numbers of days
-         * 
          */
         if (days != 0) {
             //1.
@@ -113,26 +113,92 @@ public class GroupOfCells {
             //2.
             Cell dontChangePointer = farLeftCell;
             Cell changePointer = tempGroupOfCells.farLeftCell;
-            //3.
-            while(dontChangePointer != null){
-                //3 i.
-                if(dontChangePointer.LandRAreSame()){
-                    //3 i a.
-                    changePointer.value = INACTIVE;
-                }else{
-                    //3 i b.
-                    changePointer.value = ACTIVE;
-                }
-                //3 ii.
-                dontChangePointer = dontChangePointer.right;
-                changePointer = changePointer.right;
-            }
-            //4.
-            this.farLeftCell = tempGroupOfCells.farLeftCell;
+            //3(In the method) and 4.
+            this.farLeftCell = iterateOneDay(dontChangePointer, changePointer);
             //5.
             competeR((--days));
         }
     }
+
+    /**
+     * A iterative solution to the Cell Compete Problem, advances the current group
+     * of cells by the given amount of days.
+     * 
+     * @param days how many days to advance the current Group of Cells.
+     * @throws IllegalArgumentException if days < 0
+     */
+    public void competeI(int days){
+        checkMinDays(days);
+        /*
+         * Disclaimer: This algorithm is very similar to the recursive solution.
+         * Algorithm comments:
+         * 1. Create a clone of current Group of Cells
+         * 2. Create pointer to current farLeftCell in the current Group Of Cells
+         *    then create a pointer to the new cloned Group of Cells
+         * 3. While there the pointer to the current Group of Cells is not null
+         *      i. Check if the left and right cells for the current cell are the same
+         *          a. If they true set this cell to INACTIVE
+         *          b. Else set this cell to ACTIVE
+         *      ii. Increment both pointers to the next cell in the Group of Cells
+         * 4. Set the current Group Of Cells to now have the same values as the
+         *    temp group of cells. 
+         * 5. Loop through all the values from 0 to the number of days given. 
+         * 
+         * NOTE: So the method iterateOneDay would have the same algorithm marks
+         * for both algorithms I made step five the loop, technically it happens 
+         * first. 
+         * 
+         */
+        
+        //5.
+        for(int daysCounter = 0; daysCounter < days; daysCounter++){
+            //1.
+            GroupOfCells tempGroupOfCells = this.clone();
+            //2.
+            Cell dontChangePointer = this.farLeftCell;
+            Cell changePointer = tempGroupOfCells.farLeftCell;
+            //3(In the method) and 4
+            this.farLeftCell = iterateOneDay(dontChangePointer, changePointer);
+        }
+    }
+
+    /**
+     * Checks to make sure the amount of days is greater than the min.
+     * @param days the amount of days that was requested to simulate. 
+     */
+    private void checkMinDays(int days){
+        //Check if negative days.
+        int MIN_DAYS = 0;
+        if(days < MIN_DAYS ){
+            throw new IllegalArgumentException("Can not advance group of cells by a negative amount");
+        }
+    }
+
+    /**
+     * Iterates the current Group of Cells by one day.
+     * @param dontChangePointer the pointer pointing to the original Group of Cells
+     * @param changePointer the pointer that can change with out affecting the original
+     * @return a pointer to the farLeftCell of a new group of cells after they have
+     * been iterated through one day.
+     */
+    private Cell iterateOneDay(Cell dontChangePointer, Cell changePointer){
+        Cell returnedCell = changePointer;
+        while(dontChangePointer != null){
+            //3 i.
+            if(dontChangePointer.LandRAreSame()){
+                //3 i a.
+                changePointer.value = INACTIVE;
+            }else{
+                //3 i b.
+                changePointer.value = ACTIVE;
+            }
+            //3 ii.
+            dontChangePointer = dontChangePointer.right;
+            changePointer = changePointer.right;
+        }
+        //4.
+        return returnedCell;
+    } 
 
     /**
      * Get an array that represents the state of the the current Group of Cells

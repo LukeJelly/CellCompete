@@ -20,7 +20,7 @@ public class Original{
         double endTime = System.nanoTime();
         double timeElapsed = endTime - startTime;
         System.out.println("Time Elapsed(NonRecursive) in nanoseconds: " + timeElapsed);
-        System.out.println("Time Elapsed(NonRecursive) in miliseconds: " + (timeElapsed/1000000));
+        System.out.println("Time Elapsed(NonRecursive) in milliseconds: " + (timeElapsed/1000000));
 
         System.out.println("Recursive");
         double startTimeRecursive = System.nanoTime();
@@ -28,7 +28,7 @@ public class Original{
         double endTimeRecursive = System.nanoTime();
         double timeElapsedRecursive = endTimeRecursive - startTimeRecursive;
         System.out.println("Time Elapsed(Recursive) in nanoseconds: " + timeElapsedRecursive);
-        System.out.println("Time Elapsed(Recursive) in miliseconds: " + (timeElapsedRecursive/1000000));
+        System.out.println("Time Elapsed(Recursive) in milliseconds: " + (timeElapsedRecursive/1000000));
         
     }
 
