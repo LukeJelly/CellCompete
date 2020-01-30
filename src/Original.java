@@ -1,5 +1,17 @@
 import java.util.*;
 
+/**
+ * I challanged myeslf to solve this problem in 10 min.  This was my solution,
+ * then i added the main method and a nonRecursive method to see which was faster.
+ * I personally like my recursive solution better but I understand the iterative 
+ * solution is more realistic.
+ * 
+ * I have now come back almost a year later and decided to do this properly, that
+ * is in the GroupOfCells class.
+ * 
+ * @author Luke Kelly
+ * @version 1.0
+ */
 public class Original{
     public static void main(String[] args) {
         System.out.println("NonRecursive");
