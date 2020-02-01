@@ -51,6 +51,16 @@ public class TestCellCompete {
         assertEquals(expected, actual);
     }
 
+    
+    @Test
+    public void testToString2(){
+        byte[] diffArray = {1,0,0,0,0,1,0,1};
+        GroupOfCells test = new GroupOfCells(diffArray);
+        String actual = test.toString();
+        String expected = "1,0,0,0,0,1,0,1";
+        assertEquals(expected, actual);
+    }
+
     @Test
     public void testGetArrayOfCells(){
         GroupOfCells test = new GroupOfCells(original);

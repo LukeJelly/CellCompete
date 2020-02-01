@@ -74,12 +74,11 @@ public class GroupOfCells {
     public String toString() {
         StringBuffer output = new StringBuffer();
         Cell p = farLeftCell;
-        while (p != null) {
+        while (p.right != null) {
             output.append(p.value + ",");
             p = p.right;
         }
-        // Remove the trailing ,
-        output.deleteCharAt(output.length() - 1);
+        output.append(p.value);
         return output.toString();
     }
 
