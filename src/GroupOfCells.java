@@ -30,7 +30,7 @@
  * was created to solve the CellCompete problem posted on Geeksforgeeks.
  * 
  * @author Luke Kelly
- * @version 2.0
+ * @version 2.0 2/3/2020
  */
 public class GroupOfCells {
     private Cell farLeftCell;
@@ -50,17 +50,13 @@ public class GroupOfCells {
      *                                  than 0s and 1s exist in array.
      */
     public GroupOfCells(byte[] arr) {
-        if (arr == null) {
-            throw new IllegalArgumentException("Can not create a GroupOfCells from a null array");
-        }
-        if (arr.length <= 3) {
-            throw new IllegalArgumentException("Must have at least three values in the array");
-        }
+        constructorValidation(arr);
         fillCellGroup(arr);
     }
 
     /**
-     * Private constructor to create a new GroupOfCells from a given farLeftCell.
+     * Private constructor to create a new GroupOfCells from a given Cell that
+     * represents the far left cell in a group of cells..
      * @param farLeftCell the begging, or far left cell, of your GroupOfCells
      */
     private GroupOfCells(Cell farLeftCell){
@@ -70,6 +66,8 @@ public class GroupOfCells {
     @Override
     /**
      * Returns a string representation of this GroupOfCells.
+     * 
+     * @return a string representation of this GroupOfCells.
      */
     public String toString() {
         StringBuffer output = new StringBuffer();
@@ -107,14 +105,17 @@ public class GroupOfCells {
          * 5. Recursively call this method again but decrement the numbers of days
          */
         if (days != 0) {
-            //1.
+            // Create a clone of current Group of Cells
             GroupOfCells tempGroupOfCells = this.clone();
-            //2.
+            /*
+             * Create pointer to current farLeftCell in the current Group Of 
+             * Cells then create a pointer to the new cloned Group of Cells
+             */
             Cell dontChangePointer = farLeftCell;
             Cell changePointer = tempGroupOfCells.farLeftCell;
-            //3(In the method) and 4.
+            ////Set the current Group Of Cells to now have the same values as the temp group of cells
             this.farLeftCell = iterateOneDay(dontChangePointer, changePointer);
-            //5.
+            //Recursively call this method again but decrement the numbers of days
             competeR((--days));
         }
     }
@@ -139,9 +140,8 @@ public class GroupOfCells {
          *          a. If they true set this cell to INACTIVE
          *          b. Else set this cell to ACTIVE
          *      ii. Increment both pointers to the next cell in the Group of Cells
-         * 4. Set the current Group Of Cells to now have the same values as the
-         *    temp group of cells. 
-         * 5. Loop through all the values from 0 to the number of days given. 
+         * 4. Set the current Group Of Cells to now have the same values as the temp group of cells
+         * 5. Loop through all the values from 0 to the number of days given.
          * 
          * NOTE: So the method iterateOneDay would have the same algorithm marks
          * for both algorithms I made step five the loop, technically it happens 
@@ -149,14 +149,16 @@ public class GroupOfCells {
          * 
          */
         
-        //5.
+        //Loop through all the values from 0 to the number of days given.
         for(int daysCounter = 0; daysCounter < days; daysCounter++){
-            //1.
+            //Create a clone of current Group of Cells
             GroupOfCells tempGroupOfCells = this.clone();
-            //2.
+            /*Create pointer to current farLeftCell in the current Group Of Cells
+             *then create a pointer to the new cloned Group of Cells
+             */
             Cell dontChangePointer = this.farLeftCell;
             Cell changePointer = tempGroupOfCells.farLeftCell;
-            //3(In the method) and 4
+            //Set the current Group Of Cells to now have the same values as the temp group of cells
             this.farLeftCell = iterateOneDay(dontChangePointer, changePointer);
         }
     }
@@ -174,6 +176,18 @@ public class GroupOfCells {
     }
 
     /**
+     * Validates the byte array that is received in the constructor. 
+     */
+    private void constructorValidation(byte[] arr){
+        if (arr == null) {
+            throw new IllegalArgumentException("Can not create a GroupOfCells from a null array");
+        }
+        if (arr.length <= 3) {
+            throw new IllegalArgumentException("Must have at least three values in the array");
+        }
+    }
+
+    /**
      * Iterates the current Group of Cells by one day.
      * @param dontChangePointer the pointer pointing to the original Group of Cells
      * @param changePointer the pointer that can change with out affecting the original
@@ -182,20 +196,13 @@ public class GroupOfCells {
      */
     private Cell iterateOneDay(Cell dontChangePointer, Cell changePointer){
         Cell returnedCell = changePointer;
+        // While there the pointer to the current Group of Cells is not null
         while(dontChangePointer != null){
-            //3 i.
-            if(dontChangePointer.LandRAreSame()){
-                //3 i a.
-                changePointer.value = INACTIVE;
-            }else{
-                //3 i b.
-                changePointer.value = ACTIVE;
-            }
-            //3 ii.
+            mutateACell(dontChangePointer, changePointer);
+            // Increment both pointers to the next cell in the Group of Cells
             dontChangePointer = dontChangePointer.right;
             changePointer = changePointer.right;
         }
-        //4.
         return returnedCell;
     } 
 
@@ -231,6 +238,23 @@ public class GroupOfCells {
             p = p.right;
         }
         return new GroupOfCells(newGPC);
+    }
+
+    /**
+     * Checks if the given pointer's left and right Cells are the same then changes
+     * the secondary pointers values. 
+     * @param dontChangePointer The pointer used as reference
+     * @param changePointer The pointer that's value gets changed.
+     */
+    private void mutateACell(Cell dontChangePointer, Cell changePointer){   
+            //Check if the left and right cells for the current cell are the same
+            if(dontChangePointer.LandRAreSame()){
+                //If they true set this cell to INACTIVE
+                changePointer.value = INACTIVE;
+            }else{
+                //Else set this cell to ACTIVE
+                changePointer.value = ACTIVE;
+            }
     }
 
     /**
