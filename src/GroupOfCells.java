@@ -17,7 +17,7 @@
  * group of cells, then I just traverse through the LinkedList to solve the 
  * problem.
  * 
- * //TODO: Below.
+ * //TODO:
  * I think it mite actually be easier to solve this with a Deque and a Queue but
  * I will try that at a latter time. 
  */
@@ -48,21 +48,9 @@ public class GroupOfCells {
      */
     public GroupOfCells(byte[] arr) {
         constructorValidation(arr);
-        fillCellGroup(arr);
+        createGroupOfCellsFromArray(arr);
     }
 
-    /**
-     * Private constructor to create a new GroupOfCells from a given Cell that
-     * represents the far left cell in a group of cells..
-     * @param farLeftCell the begging, or far left cell, of your GroupOfCells
-     */
-    private GroupOfCells(Cell farLeftCell){
-        this.farLeftCell = farLeftCell;
-    }
-
-    /**
-     * Validates the byte array that is received in the constructor. 
-     */
     private void constructorValidation(byte[] arr){
         if (arr == null) {
             throw new IllegalArgumentException("Can not create a GroupOfCells from a null array");
@@ -96,17 +84,13 @@ public class GroupOfCells {
      * @throws IllegalArgumentException if days < 0
      */
     public void compete(int days){
-        checkMinDays(days);
+        checkDaysGreaterThanMinPossible(days);
         for(int daysCounter = 0; daysCounter < days; daysCounter++){
             iterateGroupOfCellsOneDay();
         }
     }
 
-    /**
-     * Checks to make sure the amount of days is greater than the min.
-     * @param days the amount of days that was requested to simulate. 
-     */
-    private void checkMinDays(int days){
+    private void checkDaysGreaterThanMinPossible(int days){
         //Check if negative days.
         int MIN_DAYS = 0;
         if(days < MIN_DAYS ){
@@ -114,13 +98,6 @@ public class GroupOfCells {
         }
     }
 
-    /**
-     * Iterates the current Group of Cells by one day.
-     * @param dontChangePointer the pointer pointing to the original Group of Cells
-     * @param changePointer the pointer that can change with out affecting the original
-     * @return a pointer to the farLeftCell of a new group of cells after they have
-     * been iterated through one day.
-     */
     private void iterateGroupOfCellsOneDay(){
         Cell currentCellPointer = this.farLeftCell;
         byte leftPreviousValue = 0;
@@ -169,13 +146,7 @@ public class GroupOfCells {
         return rightValue;
     }
 
-    /**
-     * Used by the constructor to create a Group Of Cells from a given array of 
-     * cells. Preconditions of the constructor must be checked before calling this 
-     * method.
-     * @param arr the array that represents Group of Cells. 
-     */
-    private void fillCellGroup(byte[] arr) {
+    private void createGroupOfCellsFromArray(byte[] arr) {
         Cell lastUsedCell;
         Cell currentCell;
         int sizeOfArr = arr.length;
@@ -193,13 +164,7 @@ public class GroupOfCells {
         this.size = sizeOfArr;
     }
 
-    /**
-     * Makes a single cell given the value grabbed from the array at the index 
-     * given.
-     * 
-     * @return a Cell with a value at the given index of the array
-     * @throws IllegalArgumentException if the value is not a 0 or 1
-     */
+    
     private Cell makeOneCell(int index, byte[] arr, Cell leftCell) {
         byte value = arr[index];
         return new Cell(value, leftCell);
