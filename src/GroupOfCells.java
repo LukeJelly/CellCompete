@@ -14,8 +14,8 @@
  * 
  * Solution:
  * This uses a personal implementation of doubly linked list to represent the 
- * group of cells, then I just traverse through the LinkedList to solve the 
- * problem.
+ * group of cells. I traverse through the linked list to compare each cell to 
+ * it's neighbor and change that cells value if required.
  * 
  * //TODO:
  * I think it mite actually be easier to solve this with a Deque and a Queue but
