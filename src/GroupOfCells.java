@@ -125,8 +125,6 @@ public class GroupOfCells {
     /**
      * Checks if the given pointer's left and right Cells are the same then changes
      * the secondary pointers values. 
-     * @param dontChangePointer The pointer used as reference
-     * @param changePointer The pointer that's value gets changed.
      */
     private void mutateACell(byte leftPreviousValue, Cell currentCellPointer){  
             byte rightValue = findRightCellsValue(currentCellPointer);
