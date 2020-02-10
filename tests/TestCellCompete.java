@@ -34,7 +34,7 @@ public class TestCellCompete {
     @Test(expected = IllegalArgumentException.class)
     public void testCompeteNegativeDays(){
         GroupOfCells test = new GroupOfCells(original);
-        test.competeR(-1);
+        test.compete(-1);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -71,25 +71,10 @@ public class TestCellCompete {
     }
 
     @Test
-    public void testCaseOneDayRecursiveSolution(){
-        int days = 1;
-        byte[] expected = {0,1,0,0,1,0,1,0};
-        runTestRecursiveSolution(days, expected, this.original);
-    }
-
-    @Test
-    public void testCaseTwoDaysRecursiveSolution(){
-        byte[] originalDiffPermutation = {1,1,1,0,1,1,1,1};
-        int days = 2;
-        byte[] expected = {0,0,0,0,0,1,1,0};
-        runTestRecursiveSolution(days, expected, originalDiffPermutation);
-    }
-
-    @Test
     public void testCaseOneDayIterativeSolution(){
         int days = 1;
         byte[] expected = {0,1,0,0,1,0,1,0}; 
-        runTestIterativeSolution(days, expected, this.original);
+        runCompeteTest(days, expected, this.original);
     }
 
     @Test
@@ -97,29 +82,18 @@ public class TestCellCompete {
         byte[] originalDiffPermutation = {1,1,1,0,1,1,1,1};
         int days = 2;
         byte[] expected = {0,0,0,0,0,1,1,0};
-        runTestIterativeSolution(days, expected, originalDiffPermutation);
+        runCompeteTest(days, expected, originalDiffPermutation);
     }
 
-    private void runTestRecursiveSolution(int days, byte[] expected, byte[] source){
-        GroupOfCells testedGroup = new GroupOfCells(source);
-        byte[] actual = runCompeteRecursiveSolution(days, testedGroup);
-        checkArraysEqual(expected, actual);
-
-    }
-
-    private void runTestIterativeSolution(int days, byte[] expected, byte[] source){
+    private void runCompeteTest(int days, byte[] expected, byte[] source){
         GroupOfCells testGroup = new GroupOfCells(source);
-        byte[] actual = runCompeteIterativeSolution(days, testGroup);
+        byte[] actual = runCompete(days, testGroup);
         checkArraysEqual(expected, actual);
     }
-    
-    private byte[] runCompeteRecursiveSolution(int days, GroupOfCells GPC){
-        GPC.competeR(days);
-        return GPC.getArrayOfCells();
-    }
 
-    private byte[] runCompeteIterativeSolution(int days, GroupOfCells GPC){
-        GPC.competeI(days);
+
+    private byte[] runCompete(int days, GroupOfCells GPC){
+        GPC.compete(days);
         return GPC.getArrayOfCells();
     }
 
