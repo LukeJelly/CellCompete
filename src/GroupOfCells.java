@@ -14,15 +14,12 @@
  * 
  * Solution:
  * This uses a personal implementation of doubly linked list to represent the 
- * group of cells, then I just traverse through the list to solve the problem.
+ * group of cells, then I just traverse through the LinkedList to solve the 
+ * problem.
  * 
  * //TODO: Below.
  * I think it mite actually be easier to solve this with a Deque and a Queue but
  * I will try that at a latter time. 
- * 
- * Change Log:
- * Version 1.0 Working methods with a recursive solution for compete
- * Version 2.0 Working methods with a recursive and iterative solution for compete.
  */
 
 /**
@@ -63,6 +60,18 @@ public class GroupOfCells {
         this.farLeftCell = farLeftCell;
     }
 
+    /**
+     * Validates the byte array that is received in the constructor. 
+     */
+    private void constructorValidation(byte[] arr){
+        if (arr == null) {
+            throw new IllegalArgumentException("Can not create a GroupOfCells from a null array");
+        }
+        if (arr.length <= 3) {
+            throw new IllegalArgumentException("Must have at least three values in the array");
+        }
+    }
+
     @Override
     /**
      * Returns a string representation of this GroupOfCells.
@@ -81,85 +90,15 @@ public class GroupOfCells {
     }
 
     /**
-     * A recursive solution to the Cell Compete Problem, advances the current group
-     * of cells by the given amount of days.
-     * 
-     * @param days how many days to advance the current Group Of Cells
-     * @throws IllegalArgumentException if days < 0
-     */
-    public void competeR(int days) {
-        checkMinDays(days);
-        /*
-         * Disclaimer: This algorithm is very similar to the iterative solution.
-         * Algorithm comments:
-         * 1. Create a clone of current Group of Cells
-         * 2. Create pointer to current farLeftCell in the current Group Of Cells
-         *    then create a pointer to the new cloned Group of Cells
-         * 3. While there the pointer to the current Group of Cells is not null
-         *      i. Check if the left and right cells for the current cell are the same
-         *          a. If they true set this cell to INACTIVE
-         *          b. Else set this cell to ACTIVE
-         *      ii. Increment both pointers to the next cell in the Group of Cells
-         * 4. Set the current Group Of Cells to now have the same values as the
-         *    temp group of cells. 
-         * 5. Recursively call this method again but decrement the numbers of days
-         */
-        if (days != 0) {
-            // Create a clone of current Group of Cells
-            GroupOfCells tempGroupOfCells = this.clone();
-            /*
-             * Create pointer to current farLeftCell in the current Group Of 
-             * Cells then create a pointer to the new cloned Group of Cells
-             */
-            Cell dontChangePointer = farLeftCell;
-            Cell changePointer = tempGroupOfCells.farLeftCell;
-            ////Set the current Group Of Cells to now have the same values as the temp group of cells
-            this.farLeftCell = iterateOneDay(dontChangePointer, changePointer);
-            //Recursively call this method again but decrement the numbers of days
-            competeR((--days));
-        }
-    }
-
-    /**
-     * A iterative solution to the Cell Compete Problem, advances the current group
-     * of cells by the given amount of days.
+     * Advances the current group of cells by the given amount of days.
      * 
      * @param days how many days to advance the current Group of Cells.
      * @throws IllegalArgumentException if days < 0
      */
-    public void competeI(int days){
+    public void compete(int days){
         checkMinDays(days);
-        /*
-         * Disclaimer: This algorithm is very similar to the recursive solution.
-         * Algorithm comments:
-         * 1. Create a clone of current Group of Cells
-         * 2. Create pointer to current farLeftCell in the current Group Of Cells
-         *    then create a pointer to the new cloned Group of Cells
-         * 3. While there the pointer to the current Group of Cells is not null
-         *      i. Check if the left and right cells for the current cell are the same
-         *          a. If they true set this cell to INACTIVE
-         *          b. Else set this cell to ACTIVE
-         *      ii. Increment both pointers to the next cell in the Group of Cells
-         * 4. Set the current Group Of Cells to now have the same values as the temp group of cells
-         * 5. Loop through all the values from 0 to the number of days given.
-         * 
-         * NOTE: So the method iterateOneDay would have the same algorithm marks
-         * for both algorithms I made step five the loop, technically it happens 
-         * first. 
-         * 
-         */
-        
-        //Loop through all the values from 0 to the number of days given.
         for(int daysCounter = 0; daysCounter < days; daysCounter++){
-            //Create a clone of current Group of Cells
-            GroupOfCells tempGroupOfCells = this.clone();
-            /*Create pointer to current farLeftCell in the current Group Of Cells
-             *then create a pointer to the new cloned Group of Cells
-             */
-            Cell dontChangePointer = this.farLeftCell;
-            Cell changePointer = tempGroupOfCells.farLeftCell;
-            //Set the current Group Of Cells to now have the same values as the temp group of cells
-            this.farLeftCell = iterateOneDay(dontChangePointer, changePointer);
+            iterateGroupOfCellsOneDay();
         }
     }
 
@@ -176,34 +115,22 @@ public class GroupOfCells {
     }
 
     /**
-     * Validates the byte array that is received in the constructor. 
-     */
-    private void constructorValidation(byte[] arr){
-        if (arr == null) {
-            throw new IllegalArgumentException("Can not create a GroupOfCells from a null array");
-        }
-        if (arr.length <= 3) {
-            throw new IllegalArgumentException("Must have at least three values in the array");
-        }
-    }
-
-    /**
      * Iterates the current Group of Cells by one day.
      * @param dontChangePointer the pointer pointing to the original Group of Cells
      * @param changePointer the pointer that can change with out affecting the original
      * @return a pointer to the farLeftCell of a new group of cells after they have
      * been iterated through one day.
      */
-    private Cell iterateOneDay(Cell dontChangePointer, Cell changePointer){
-        Cell returnedCell = changePointer;
+    private void iterateGroupOfCellsOneDay(){
+        Cell currentCellPointer = this.farLeftCell;
+        byte leftPreviousValue = 0;
         // While there the pointer to the current Group of Cells is not null
-        while(dontChangePointer != null){
-            mutateACell(dontChangePointer, changePointer);
-            // Increment both pointers to the next cell in the Group of Cells
-            dontChangePointer = dontChangePointer.right;
-            changePointer = changePointer.right;
+        while(currentCellPointer != null){
+            byte currentCellValue = currentCellPointer.value;
+            mutateACell(leftPreviousValue, currentCellPointer);
+            leftPreviousValue = currentCellValue;
+            currentCellPointer = currentCellPointer.right;
         }
-        return returnedCell;
     } 
 
     /**
@@ -219,47 +146,32 @@ public class GroupOfCells {
         }
         return outputArr;
     }
-
-    /**
-     * Clones the current Group Of Cells
-     * @return a new instance of the current Group Of Cells
-     */
-    public GroupOfCells clone(){
-        Cell p = farLeftCell;
-        Cell newGPC = p.clone();
-        p = p.right;
-        Cell lastCell = newGPC;
-        Cell currentCell;
-        while(p != null){
-            currentCell = p.clone();
-            currentCell.left = lastCell;
-            lastCell.right = currentCell;
-            lastCell = currentCell;
-            p = p.right;
-        }
-        return new GroupOfCells(newGPC);
-    }
-
     /**
      * Checks if the given pointer's left and right Cells are the same then changes
      * the secondary pointers values. 
      * @param dontChangePointer The pointer used as reference
      * @param changePointer The pointer that's value gets changed.
      */
-    private void mutateACell(Cell dontChangePointer, Cell changePointer){   
+    private void mutateACell(byte leftPreviousValue, Cell currentCellPointer){  
+            byte rightValue = findRightCellsValue(currentCellPointer);
             //Check if the left and right cells for the current cell are the same
-            if(dontChangePointer.LandRAreSame()){
+            if(leftPreviousValue == rightValue){
                 //If they true set this cell to INACTIVE
-                changePointer.value = INACTIVE;
+                currentCellPointer.value = INACTIVE;
             }else{
                 //Else set this cell to ACTIVE
-                changePointer.value = ACTIVE;
+                currentCellPointer.value = ACTIVE;
             }
+    }
+
+    private byte findRightCellsValue(Cell cell){
+        byte rightValue = (cell.right == null) ? INACTIVE : cell.right.value; 
+        return rightValue;
     }
 
     /**
      * Used by the constructor to create a Group Of Cells from a given array of 
-     * cells.Preconditions of the constructor must be checked before calling this 
+     * cells. Preconditions of the constructor must be checked before calling this 
      * method.
      * @param arr the array that represents Group of Cells. 
      */
@@ -326,30 +238,6 @@ public class GroupOfCells {
             this.value = value;
             this.left = left;
             this.right = right;
-        }
-
-        /**
-         * Clones the current cell
-         * @return a new instance of this cell.
-         */
-        public Cell clone(){
-            return new Cell(this.value, this.left, this.right);
-        }
-
-        /**
-         * Checks if the left and right cells of this cell are the same, 
-         * either both inactive or both active.
-         * @return returns true if they are both the same.
-         */
-        public boolean LandRAreSame() {
-            /* 
-             * If the left or right cell is null that means it is always INACTIVE
-             * According to the prompt
-             */
-            byte leftValue = (left == null) ? INACTIVE : left.value;
-            byte rightValue = (right == null) ? INACTIVE : right.value;
-
-            return (leftValue == rightValue);
         }
     }
 }
