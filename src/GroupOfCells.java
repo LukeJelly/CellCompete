@@ -91,7 +91,6 @@ public class GroupOfCells {
     }
 
     private void checkDaysGreaterThanMinPossible(int days){
-        //Check if negative days.
         int MIN_DAYS = 0;
         if(days < MIN_DAYS ){
             throw new IllegalArgumentException("Can not advance group of cells by a negative amount");
@@ -131,12 +130,9 @@ public class GroupOfCells {
      */
     private void mutateACell(byte leftPreviousValue, Cell currentCellPointer){  
             byte rightValue = findRightCellsValue(currentCellPointer);
-            //Check if the left and right cells for the current cell are the same
             if(leftPreviousValue == rightValue){
-                //If they true set this cell to INACTIVE
                 currentCellPointer.value = INACTIVE;
             }else{
-                //Else set this cell to ACTIVE
                 currentCellPointer.value = ACTIVE;
             }
     }
