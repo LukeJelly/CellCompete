@@ -60,21 +60,27 @@ public class GroupOfCells {
         }
     }
 
-    @Override
-    /**
-     * Returns a string representation of this GroupOfCells.
-     * 
-     * @return a string representation of this GroupOfCells.
-     */
-    public String toString() {
-        StringBuffer output = new StringBuffer();
-        Cell p = farLeftCell;
-        while (p.right != null) {
-            output.append(p.value + ",");
-            p = p.right;
+    private void createGroupOfCellsFromArray(byte[] arr) {
+        this.farLeftCell =  makeOneCell(arr[0], arr, null);
+        //Loop through the rest and create the rest of the cells.
+        int startIndex = 1;
+        createRestOfTheCells(arr, startIndex);
+        this.size = arr.length;
+    }
+
+    private void createRestOfTheCells(byte[] arr, int startIndex){
+        Cell lastUsedCell = this.farLeftCell;
+        Cell currentCell;
+        for (; startIndex < arr.length; startIndex++) {
+            byte value = arr[startIndex];
+            currentCell = makeOneCell(value, arr, lastUsedCell);
+            lastUsedCell.right = currentCell;
+            lastUsedCell = currentCell;
         }
-        output.append(p.value);
-        return output.toString();
+    }
+
+    private Cell makeOneCell(byte value, byte[] arr, Cell leftCell) {
+        return new Cell(value, leftCell);
     }
 
     /**
@@ -110,6 +116,19 @@ public class GroupOfCells {
     } 
 
     /**
+     * Checks if the given pointer's left and right Cells are the same then changes
+     * the secondary pointers values. 
+     */
+    private void mutateACell(byte leftPreviousValue, Cell currentCellPointer){  
+        byte rightValue = findRightCellsValue(currentCellPointer);
+        if(leftPreviousValue == rightValue){
+            currentCellPointer.value = INACTIVE;
+        }else{
+            currentCellPointer.value = ACTIVE;
+        }
+    }
+
+    /**
      * Get an array that represents the state of the the current Group of Cells
      * @return an array that represents the state of the current Group of Cells
      */
@@ -122,46 +141,27 @@ public class GroupOfCells {
         }
         return outputArr;
     }
-    /**
-     * Checks if the given pointer's left and right Cells are the same then changes
-     * the secondary pointers values. 
-     */
-    private void mutateACell(byte leftPreviousValue, Cell currentCellPointer){  
-            byte rightValue = findRightCellsValue(currentCellPointer);
-            if(leftPreviousValue == rightValue){
-                currentCellPointer.value = INACTIVE;
-            }else{
-                currentCellPointer.value = ACTIVE;
-            }
-    }
 
     private byte findRightCellsValue(Cell cell){
         byte rightValue = (cell.right == null) ? INACTIVE : cell.right.value; 
         return rightValue;
     }
 
-    private void createGroupOfCellsFromArray(byte[] arr) {
-        Cell lastUsedCell;
-        Cell currentCell;
-        int sizeOfArr = arr.length;
-        int i = 0;
-        lastUsedCell = makeOneCell(i, arr, null);
-        i++;
-        //Set farLeftCell to the first cell created.
-        this.farLeftCell = lastUsedCell;
-        //Loop through the rest and create the rest of the cells.
-        for (; i < sizeOfArr; i++) {
-            currentCell = makeOneCell(i, arr, lastUsedCell);
-            lastUsedCell.right = currentCell;
-            lastUsedCell = currentCell;
+    @Override
+    /**
+     * Returns a string representation of this GroupOfCells.
+     * 
+     * @return a string representation of this GroupOfCells.
+     */
+    public String toString() {
+        StringBuffer output = new StringBuffer();
+        Cell p = farLeftCell;
+        while (p.right != null) {
+            output.append(p.value + ",");
+            p = p.right;
         }
-        this.size = sizeOfArr;
-    }
-
-    
-    private Cell makeOneCell(int index, byte[] arr, Cell leftCell) {
-        byte value = arr[index];
-        return new Cell(value, leftCell);
+        output.append(p.value);
+        return output.toString();
     }
 
     /**
